@@ -37,17 +37,35 @@ public class CacheValidationAop {
         this.cacheManager = Objects.requireNonNull(cacheManager, "CacheManager must not be null");
         this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "JdbcTemplate must not be null");
     }
+    
+    
+    @Around("@annotation(com.futechsoft.framework.annotation.CacheAccess)")
+    public Object validateCache(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object[] args = joinPoint.getArgs();
+        Pageable pageable = null;
+        FtMap params = null;
 
-    @Around("@annotation(com.futechsoft.framework.annotation.CacheAccess) && args(pageable, params,..)")
+        for (Object arg : args) {
+            if (arg instanceof Pageable) {
+                pageable = (Pageable) arg;
+            } else if (arg instanceof FtMap) {
+                params = (FtMap) arg;
+            }
+        }
+
+        return validateCache(joinPoint, pageable, params);
+    }
+
+    
+
+  //  @Around("@annotation(com.futechsoft.framework.annotation.CacheAccess) && args(pageable, params,..)")
     public Object validateCache(ProceedingJoinPoint joinPoint, Pageable pageable, FtMap params) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         CacheAccess cacheAccess = method.getAnnotation(CacheAccess.class);
 
-        // 캐시 이름 가져오기
         String cacheName = StringUtils.hasText(cacheAccess.value()) ? cacheAccess.value() : DEFAULT_CACHE_NAME;
         
-        // 캐시 키 생성 - 파라미터 직렬화 방식 개선
         String key = generateCacheKey(pageable, params);
         
         logger.debug("Cache validation: cacheName={}, key={}", cacheName, key);
@@ -142,10 +160,14 @@ public class CacheValidationAop {
     */
     private String generateCacheKey(Pageable pageable, FtMap params) {
         StringBuilder keyBuilder = new StringBuilder();
-        keyBuilder.append(pageable.getPageNo())
-                .append('_')
-                .append(pageable.getPageSize())
-                .append('_');
+        
+        if(pageable!=null) {
+            keyBuilder.append(pageable.getPageNo())
+            .append('_')
+            .append(pageable.getPageSize())
+            .append('_');
+        }
+    
         
         // FtMap에서 "sch"로 시작하는 키와 "menuSeq", "topMenuSeq" 키만 포함
         if (params != null) {
