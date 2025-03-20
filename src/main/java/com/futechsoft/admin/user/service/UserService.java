@@ -31,8 +31,8 @@ public class UserService {
 	@Resource(name = "user.mapper.UserMapper")
 	private UserMapper mapper;
 
-	@Autowired
-	private  CacheUpdateService cacheUpdateService; 
+	//@Autowired
+	//private  CacheUpdateService cacheUpdateService; 
 	
 	
 	@CacheAccess(value = "userCache")
@@ -68,7 +68,7 @@ public class UserService {
 
 		saveUserAuth(params);
 		
-		cacheUpdateService.updateCacheTimestamp("userCache");
+		//cacheUpdateService.updateCacheTimestamp("userCache");
 	}
 
 	@CacheEvict(value = "userCache", allEntries = true)
@@ -78,7 +78,7 @@ public class UserService {
 		mapper.deleteUserAuth(params);
 		saveUserAuth(params);
 		
-		cacheUpdateService.updateCacheTimestamp("userCache");
+		//cacheUpdateService.updateCacheTimestamp("userCache");
 	}
 
 	@CacheEvict(value = "userCache", allEntries = true)
@@ -97,7 +97,7 @@ public class UserService {
 
 		mapper.updateUser(params);
 		
-		cacheUpdateService.updateCacheTimestamp("userCache");
+		//cacheUpdateService.updateCacheTimestamp("userCache");
 
 	}
 
@@ -108,7 +108,7 @@ public class UserService {
 		mapper.deleteUserAuth(params);
 		mapper.deleteUser(params);
 
-		cacheUpdateService.updateCacheTimestamp("userCache");
+		//cacheUpdateService.updateCacheTimestamp("userCache");
 	}
 
 }
