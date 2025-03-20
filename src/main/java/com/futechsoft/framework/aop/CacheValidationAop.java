@@ -236,7 +236,7 @@ public class CacheValidationAop {
             return cacheUpdateService.getLastUpdatedByCacheName(cacheName);
         } catch (Exception e) {
             logger.debug("Failed to get last updated timestamp for cache: " + cacheName, e);
-            return null; // 해당 캐시 기록이 없으면 null 반환
+            return null; 
         }
     }
     
@@ -246,26 +246,18 @@ public class CacheValidationAop {
     public void cacheEvictMethods() {}
 
     @Around("cacheEvictMethods()")
-    @Transactional  // 트랜잭션 처리
+    @Transactional  
     public Object aroundCacheEvict(ProceedingJoinPoint joinPoint) throws Throwable {
-        // 메소드 시그니처를 통해 @CacheEvict 어노테이션에 접근
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         
-        // @CacheEvict 어노테이션 가져오기
         CacheEvict cacheEvict = method.getAnnotation(CacheEvict.class);
         
-        // cacheName을 @CacheEvict 어노테이션에서 가져오기
-        String cacheName = cacheEvict.value().length > 0 ? cacheEvict.value()[0] : "defaultCache";
+        String cacheName = cacheEvict.value().length > 0 ? cacheEvict.value()[0] : DEFAULT_CACHE_NAME;
         
-        System.out.println("트랜잭션 시작, 캐시 이름: " + cacheName);
-
-        // 실제 메소드 실행
         Object result = joinPoint.proceed();
 
-        // 캐시 갱신 타임스탬프 업데이트 작업
         cacheUpdateService.updateCacheTimestamp(cacheName);
-        
 
         return result;
     }
