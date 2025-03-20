@@ -1,0 +1,14 @@
+<th:block th:fragment="includeTagsFragment"
+    th:with="
+        requestURI=${#request.getAttribute('javax.servlet.forward.request_uri')},
+        servletPath=${#request.getAttribute('javax.servlet.forward.servlet_path')},
+        contextPath=${#request.getAttribute('javax.servlet.forward.context_path')},
+        scheme=${#httpServletRequest.scheme},
+        serverName=${#httpServletRequest.serverName},
+        serverPort=${#httpServletRequest.serverPort},
+        method=${#httpServletRequest.method},
+    
+    ">
+</th:block>
+
+ 

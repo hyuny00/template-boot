@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Home</title>
+
+	    <!-- includeTags.html에서 basePath를 가져와 변수로 전달 -->
+	    <th:block th:replace="~{framework/_includes/includeTags :: includeTagsFragment}"></th:block>
+	    <!-- includeScript.html에서 basePath 사용 가능 -->
+	    <th:block th:replace="~{framework/_includes/includeScript :: includeScriptFragment}"></th:block>
+   
+ <th:block sec:authorize="isAuthenticated()">
+ ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ
+ </th:block>
+</head>
+
+<body>
+    <h2>메인 </h2>
+
+ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
+    
+    <!-- Error Message Handling (Thymeleaf Version) -->
+  
+</body>
+</html>
