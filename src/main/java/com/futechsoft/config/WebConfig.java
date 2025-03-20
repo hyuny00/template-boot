@@ -89,10 +89,12 @@ public class WebConfig implements WebMvcConfigurer{
 		//registry.addResourceHandler("/**").addResourceLocations("classpath:/static/").setCachePeriod(60 * 60 * 24 * 365); 
 	}
 	
+	/*
+	addViewControllers()에서 루트 경로 설정을 삭제하면, 컨트롤러에서 / URL을 처리할 수 있습니다.
 	@Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "index.jsp");
     }
-  
+  */
 
 }

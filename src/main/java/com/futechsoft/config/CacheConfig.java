@@ -14,17 +14,17 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 @EnableCaching
 public class CacheConfig {
 	
-	 @Bean
-	    public CacheManager cacheManager() {
-	        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-	        
-	        // 모든 캐시에 동일한 설정 적용
-	        cacheManager.setCaffeine(Caffeine.newBuilder()
-	                .maximumSize(3000)   
-	                .expireAfterAccess(30, TimeUnit.DAYS) 
-	                .recordStats());     
-	        
-	        return cacheManager;
-	    }
+	@Bean
+    public CacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        
+        // 모든 캐시에 동일한 설정 적용
+        cacheManager.setCaffeine(Caffeine.newBuilder()
+                .maximumSize(10000)   
+                .expireAfterAccess(30, TimeUnit.DAYS) 
+                .recordStats());     
+        
+        return cacheManager;
+    }
 
 }

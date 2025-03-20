@@ -133,13 +133,15 @@ public class CacheValidationAop {
     /**
      * 페이징 정보와 파라미터를 사용하여 캐시 키를 생성
      */
-    /*
+    
     private String generateCacheKey(Pageable pageable, FtMap params) {
         StringBuilder keyBuilder = new StringBuilder();
-        keyBuilder.append(pageable.getPageNo())
-                .append('_')
-                .append(pageable.getPageSize())
-                .append('_');
+        if(pageable!=null) {
+            keyBuilder.append(pageable.getPageNo())
+            .append('_')
+            .append(pageable.getPageSize())
+            .append('_');
+        }
         
         // FtMap에서 값이 있는 항목만 포함하고 "csrf" 키는 제외
         if (params != null) {
@@ -160,7 +162,9 @@ public class CacheValidationAop {
         
         return keyBuilder.toString();
     }
-    */
+    
+    
+    /*
     private String generateCacheKey(Pageable pageable, FtMap params) {
         StringBuilder keyBuilder = new StringBuilder();
         
@@ -190,7 +194,7 @@ public class CacheValidationAop {
         }   
         
         return keyBuilder.toString();
-    }
+    }*/
 
     /**
      * 캐시와 DB의 현재 시간을 함께 저장
