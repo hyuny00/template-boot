@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -32,18 +31,14 @@ public class CacheValidationAop {
     private static final Logger logger = LoggerFactory.getLogger(CacheValidationAop.class);
     private static final String DEFAULT_CACHE_NAME = "defaultCache";
     private static final String CACHE_CREATION_TIME_SUFFIX = "_created";
-    private static final String QUERY_LAST_UPDATED = "SELECT last_updated FROM cache_update_log WHERE cache_name = ?";
-    private static final String QUERY_CURRENT_TIME = "SELECT NOW()";
 
     private final CacheManager cacheManager;
-    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
 	private  CacheUpdateService cacheUpdateService; 
     
-    public CacheValidationAop(CacheManager cacheManager, JdbcTemplate jdbcTemplate) {
+    public CacheValidationAop(CacheManager cacheManager) {
         this.cacheManager = Objects.requireNonNull(cacheManager, "CacheManager must not be null");
-        this.jdbcTemplate = Objects.requireNonNull(jdbcTemplate, "JdbcTemplate must not be null");
     }
     
     
@@ -226,7 +221,7 @@ public class CacheValidationAop {
      */
     private Timestamp getCurrentDatabaseTime() {
         try {
-            return jdbcTemplate.queryForObject(QUERY_CURRENT_TIME, Timestamp.class);
+            return cacheUpdateService.getCurrentTime();
         } catch (Exception e) {
             logger.error("Failed to get current database time", e);
             return null;
@@ -238,11 +233,7 @@ public class CacheValidationAop {
      */
     private Timestamp getLastUpdatedTimestamp(String cacheName) {
         try {
-            return jdbcTemplate.queryForObject(
-                QUERY_LAST_UPDATED,
-                new Object[]{cacheName}, 
-                Timestamp.class
-            );
+            return cacheUpdateService.getLastUpdatedByCacheName(cacheName);
         } catch (Exception e) {
             logger.debug("Failed to get last updated timestamp for cache: " + cacheName, e);
             return null; // 해당 캐시 기록이 없으면 null 반환

@@ -7,9 +7,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +16,6 @@ import com.futechsoft.admin.user.vo.UserAuth;
 import com.futechsoft.framework.annotation.CacheAccess;
 import com.futechsoft.framework.common.page.Page;
 import com.futechsoft.framework.common.page.Pageable;
-import com.futechsoft.framework.common.service.CacheUpdateService;
 import com.futechsoft.framework.common.sqlHelper.TableInfo;
 import com.futechsoft.framework.common.sqlHelper.WhereKey;
 import com.futechsoft.framework.util.FtMap;
@@ -31,9 +28,6 @@ public class UserService {
 	@Resource(name = "user.mapper.UserMapper")
 	private UserMapper mapper;
 
-	//@Autowired
-	//private  CacheUpdateService cacheUpdateService; 
-	
 	
 	@CacheAccess(value = "userCache")
 	public Page<FtMap> getPageList(Pageable pageable, FtMap params) throws Exception {
@@ -68,7 +62,6 @@ public class UserService {
 
 		saveUserAuth(params);
 		
-		//cacheUpdateService.updateCacheTimestamp("userCache");
 	}
 
 	@CacheEvict(value = "userCache", allEntries = true)
@@ -78,7 +71,6 @@ public class UserService {
 		mapper.deleteUserAuth(params);
 		saveUserAuth(params);
 		
-		//cacheUpdateService.updateCacheTimestamp("userCache");
 	}
 
 	@CacheEvict(value = "userCache", allEntries = true)
@@ -94,21 +86,14 @@ public class UserService {
 			params.put("authSeq", authSeq);
 			mapper.insertUserAuth(params);
 		}
-
 		mapper.updateUser(params);
-		
-		//cacheUpdateService.updateCacheTimestamp("userCache");
-
 	}
 
 	@CacheEvict(value = "userCache", allEntries = true)
 	@Transactional
 	public void delete(FtMap params) throws Exception {
-		
 		mapper.deleteUserAuth(params);
 		mapper.deleteUser(params);
-
-		//cacheUpdateService.updateCacheTimestamp("userCache");
 	}
 
 }

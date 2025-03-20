@@ -42,13 +42,7 @@
 	 </delete>
 	 
 	 
-	 <delete id="deleteCache">
-	       	delete cache_update_log where cache_name =#{cacheName}
-	 </delete>
-	 
-	  <insert id="insertCache" >
-	  	INSERT INTO cache_update_log (cache_name, last_updated) VALUES (#{cacheName}, NOW())
-	  </insert>
+	
 
 
 </mapper>
