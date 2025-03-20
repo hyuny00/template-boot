@@ -82,6 +82,7 @@ public class UserService {
 	}
 
 	@CacheEvict(value = "userCache", allEntries = true)
+	@Transactional
 	private void saveUserAuth(FtMap params) throws Exception {
 
 		String[] authSeqs = params.getString("authSeqs").split(",");
