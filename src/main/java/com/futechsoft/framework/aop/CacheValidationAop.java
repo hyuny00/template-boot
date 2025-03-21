@@ -90,8 +90,10 @@ public class CacheValidationAop {
             Timestamp lastUpdated = getLastUpdatedTimestamp(cacheName);
             
             if (lastUpdated != null) {
-                long lastUpdatedTimeSeconds = lastUpdated.getTime() / 1000;
-                long cacheCreatedTimeSeconds = cacheCreationTime / 1000;
+                //long lastUpdatedTimeSeconds = lastUpdated.getTime() / 1000;
+                //long cacheCreatedTimeSeconds = cacheCreationTime / 1000;
+                long lastUpdatedTimeSeconds = lastUpdated.getTime();
+                long cacheCreatedTimeSeconds = cacheCreationTime;
                 
                 // 캐시가 유효하면 캐시에서 데이터를 반환
                 if (cacheCreatedTimeSeconds > lastUpdatedTimeSeconds) {
