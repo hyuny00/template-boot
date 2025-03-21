@@ -107,6 +107,7 @@ public class CacheValidationAop {
             }
         } else {
             logger.debug("Cache miss: {}", key);
+            cacheUpdateService.updateCacheTimestamp(cacheName);
         }
 
         // 캐시가 없거나 유효하지 않으면 DB에서 조회

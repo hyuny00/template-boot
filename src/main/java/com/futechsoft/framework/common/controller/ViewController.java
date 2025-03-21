@@ -11,7 +11,11 @@ import com.futechsoft.framework.util.SecurityUtil;
 @Controller
 public class ViewController  extends AbstractController {
 
-
+	@RequestMapping("/")
+	public String main() throws Exception {
+		return "tiles:main";
+		//return "main";
+	}
 
 	@RequestMapping(value = "/common/view")
 	public String samplePopup(HttpServletRequest request) throws Exception {
