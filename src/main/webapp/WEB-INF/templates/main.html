@@ -1,25 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{framework/layout/layout}">
 <head>
-    <title>Home</title>
-
-	    <!-- includeTags.html에서 basePath를 가져와 변수로 전달 -->
-	    <th:block th:replace="~{framework/_includes/includeTags :: includeTagsFragment}"></th:block>
-	    <!-- includeScript.html에서 basePath 사용 가능 -->
-	    <th:block th:replace="~{framework/_includes/includeScript :: includeScriptFragment}"></th:block>
-   
- <th:block sec:authorize="isAuthenticated()">
- ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ
- </th:block>
+    <title>홈페이지222</title>
 </head>
 
-<body>
-    <h2>메인 </h2>
 
-ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
+<body>
+
+<!-- includeTagsFragment 포함 -->
     
-    <!-- Error Message Handling (Thymeleaf Version) -->
-  
+    <div layout:fragment="content">
+    
+    
+    <script>
+    // Ajax로 form 데이터 전달 예시
+    $(document).ready(function() {
+    	
+    	alert("DD");
+        var acceptType = 'doc';  // 예시 값, 실제로는 동적으로 설정 가능
+        var uploadFormId = 'someId'; // 실제값을 사용
+        var refDocId = 'refId'; // 실제값을 사용
+        var docId = 'docId123'; // 실제값을 사용
+        var mode = 'edit'; // 실제값을 사용
+
+        $.ajax({
+            url: '/file/uploadFormAjax',  // 서버 URL
+            type: 'GET',
+            data: {
+                acceptType: acceptType,  // 서버로 넘길 데이터
+                uploadFormId: uploadFormId,
+                refDocId: refDocId,
+                docId: docId,
+                mode: mode
+            },
+            success: function(response) {
+                // 서버에서 받은 HTML을 #uploadFormContainer에 삽입
+                console.log(response);
+                $('#uploadFormContainer').html(response);  // 서버에서 받은 HTML을 삽입
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+        });
+
+    });
+</script>
+    
+    <div id="uploadFormContainer"></div>
+        <h2>홈 페이지</h2>
+        <!-- 여기에서 requestURI 사용 -->
+        <p>현재 요청 URI: <span th:text="${requestURI}"></span></p>
+        
+</div>
+    </div>
 </body>
 </html>

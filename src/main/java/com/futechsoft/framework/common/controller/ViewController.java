@@ -13,8 +13,8 @@ public class ViewController  extends AbstractController {
 
 	@RequestMapping("/")
 	public String main() throws Exception {
-		return "tiles:main";
-		//return "main";
+		//return "tiles:main";
+		return "main";
 	}
 
 	@RequestMapping(value = "/common/view")

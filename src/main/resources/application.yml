@@ -43,10 +43,10 @@ spring:
    
 ---
 spring:
-       mvc:
-        view:
-         prefix: /WEB-INF/jsp/
-         suffix: .jsp
+       #mvc:
+        #view:
+         #prefix: /WEB-INF/jsp/
+         #suffix: .jsp
 
 
 
@@ -55,9 +55,8 @@ spring:
         prefix: file:///D:/ODA_DEV/eGovFrameDev-3.9.0-64bit/workspace/template/src/main/webapp/WEB-INF/templates/
         suffix : .html
         cache : false
-        view-names : thymeleaf/*
-        
-       
+        #view-names : thymeleaf/*
+
 ---
 #spring:
  #web:

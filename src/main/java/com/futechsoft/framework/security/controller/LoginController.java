@@ -56,8 +56,8 @@ public class LoginController {
 	@RequestMapping("/main")
 	public String main() throws Exception {
 
-		return "tiles:main";
-		//return "main";
+		//return "tiles:main";
+		return "main";
 	}
 
 	@RequestMapping(value = "/loginWithoutSecurity")

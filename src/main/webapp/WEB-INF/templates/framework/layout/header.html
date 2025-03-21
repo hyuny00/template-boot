@@ -1,0 +1,29 @@
+<script type="text/javascript">
+    function logout() {
+        document.logoutForm.submit();
+    }
+</script>
+
+<div class="header">
+    <h1>HEADER</h1>
+
+
+
+    <!-- 로그아웃 폼 -->
+    <form id="logoutForm" name="logoutForm"  action="/logout" method="POST">
+        <!-- CSRF 토큰을 그대로 보여주기 -->
+        <input type="hidden" name="parameterName" th:value="${_csrf.parameterName}" />
+        <input type="hidden" name="token" th:value="${_csrf.token}" />
+        
+        <!-- 인증되지 않은 경우 로그인 링크 표시 -->
+        <div th:if="${#authentication == null}">
+            <a href="/login/loginPage">로그인</a>
+        </div>
+
+        <!-- 인증된 경우 사용자 정보와 로그아웃 링크 표시 -->
+        <div th:if="${#authentication != null}">
+            <span th:text="${#authentication.name} + '님'"></span>
+            <a href="javascript:logout();">로그아웃</a>
+        </div>
+    </form>
+</div>

@@ -98,10 +98,5 @@ public class GlobalExceptionHandler {
 	 */
 	
 	
-	  @ModelAttribute("basePath")
-	    public String getBasePath(HttpServletRequest request) {
-
-	        return "";
-	    }
 
 }
