@@ -1,14 +1,149 @@
+<style>
+    .file_list {
+        min-height: 80px;
+        width: 95%;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dcdfe2;
+    }
+
+    .file_progress {
+        display: none;
+        background-color: #ddd;
+        color: #4CAF50;
+        padding: 0px 0px;
+        margin: 2px 0;
+        border: 1px inset #446;
+        border-radius: 5px;
+        width: 95%;
+    }
+
+    .button {
+        background-color: black;
+        border: none;
+        color: white;
+        padding: 3px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin: 4px 2px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .button1 { background-color: #E66454; }
+    .button2 { background-color: red; }
+    .button3 { background-color: green; }
+    .button4 { background-color: blue; }
+
+    .file_table {
+        margin-top: 5px;
+        border: 1px solid #dfdfdf;
+        background-color: #edf0f1;
+        width: 95%;
+        text-align: center;
+    }
+
+    .file_header {
+        width: 95%;
+        background-color: #edf0f1;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    progress {
+        position: relative;
+        text-align: center;
+        height: 2em;
+        width: 100%;
+        border-radius: 50px;
+        border: 1px solid #ddd;
+        background-color: #ddd;
+        color: #000;
+        width: 95%;
+    }
+
+    progress:after {
+        display: inline-block;
+        position: absolute;
+        top: 20%;
+        content: attr(data-label);
+        font-size: 0.8em;
+        color: #000;
+    }
+
+    progress::-webkit-progress-bar {
+        border-radius: 50px;
+        background-color: #ddd;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: lightskyblue;
+        border-radius: 50px;
+    }
+
+    progress::-ms-fill {
+        background-color: lightskyblue;
+    }
+
+    progress::-moz-progress-value {
+        background-color: lightskyblue;
+    }
+
+    .counts { position: absolute; z-index: 1; }
+</style>
+
 <div style="width:95%">
-
-<span th:text="${uploadFormId}">
-
-<div th:if="${mode != 'view'}">
-    <label class="button" th:text="'Upload Form ID: ' + ${uploadFormId}" data-file-add>UPLOAD</label>
+    <div th:if="${mode != 'view'}">
+        <label class="button" th:for="'file_input_' + ${uploadFormId}" data-file-add>UPLOAD</label>
+        <span th:id="'delButton_' + ${uploadFormId}" style="display:none">
+            <span class="button button1" th:attr="data-upload-form-id=${uploadFormId}" onclick="uploadModule.deleteFile(this.getAttribute('data-upload-form-id'))">선택 삭제</span>
+            <span class="button button2" th:attr="data-upload-form-id=${uploadFormId}" onclick="uploadModule.deleteAllFile(this.getAttribute('data-upload-form-id'))">전체 삭제</span>
+        </span>
+        <span th:id="'sortButton_' + ${uploadFormId}" style="float:right;display:none">
+            <div th:if="${#strings.isEmpty(docId)}">
+                <span class="button button3" th:attr="data-upload-form-id=${uploadFormId}" onclick="uploadModule.sort(this.getAttribute('data-upload-form-id'), 'up')">&#8593;</span>
+                <span class="button button4" th:attr="data-upload-form-id=${uploadFormId}" onclick="uploadModule.sort(this.getAttribute('data-upload-form-id'), 'down')">&#8595;</span>
+            </div>
+        </span>
+    </div>
+    <div th:if="${mode == 'view'}">
+        <span class="button button3" th:attr="data-upload-form-id=${uploadFormId}" onclick="uploadModule.download(this.getAttribute('data-upload-form-id'))">ZIP</span>
+    </div>
+    <input type="file" th:id="'file_input_' + ${uploadFormId}" th:attr="accept=${accept}, data-upload-form-id=${uploadFormId}" multiple
+           onchange="uploadModule.upload(this.getAttribute('data-upload-form-id'));" style="display:none" />
 </div>
 
+<div data-file-list th:attr="data-doc-id=${docId}, data-thumbnail-yn=${thumbnailYn}, data-upload-form-id=${uploadFormId}, data-mode=${mode}, data-ref-doc-id=${refDocId}, data-base-path=''">
+    <progress th:id="'progressBar_' + ${uploadFormId}" style="display:none" max="100" data-label=""></progress>
 
- <span class="button" th:text="'Upload Form ID: ' + ${uploadFormId}" data-file-add>UPLOAD</span>
+    <div class="file_table">
+        <table class="file_header">
+            <thead>
+                <tr>
+                    <th width="30px">
+                        <input type="checkbox" onclick="uploadModule.checkAll(this.getAttribute('data-upload-form-id'))" th:name="'checkAll_' + ${uploadFormId}" th:id="'checkAll_' + ${uploadFormId}" />
+                    </th>
+                    <th>파일명</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
+    <div th:id="'fileList_' + ${uploadFormId}" th:attr="data-thumbnail-yn=${thumbnailYn}, data-max-file-size=${maxFileSize}, data-accept-file=${accept}, data-single-file=${singleFile}, data-max-file-cnt=${maxFileCnt}" class="file_list">
+        <div th:if="${mode != 'view'}">파일을 드래그 해주세요</div>
+    </div>
 
-  
+    <label th:id="'progressLabel_' + ${uploadFormId}" th:if="${mode != 'view'}" th:style="${mode == 'view'} ? 'display:none' : ''">No file selected</label>
+    <input type="hidden" th:name="fileInfoList" th:id="'fileInfoList_' + ${uploadFormId}" />
+
+    <input type="hidden" th:name="${refDocId}" th:id="'docId_' + ${uploadFormId}" th:value="${docId}" />
+
+    <div th:if="${mode != 'view'}">
+        <input type="hidden" th:name="refDocId" th:id="'refDocId_' + ${uploadFormId}" th:value="${refDocId}" />
+    </div>
+    <div th:if="${mode == 'view'}">
+        <input type="hidden" th:name="refDocId" th:id="'refDocId_' + ${uploadFormId}" value="NONE" />
+    </div>
 </div>

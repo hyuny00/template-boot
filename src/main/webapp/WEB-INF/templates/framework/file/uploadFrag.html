@@ -1,0 +1,28 @@
+<div th:fragment="fragment">
+    <script>
+        // 공통 업로드 폼 처리 스크립트
+        function loadUploadForm(refDocId, docId, maxFileSize, containerId) {
+            refDocId = refDocId || 'attcDocId';
+            docId = docId || 'acctDocId';
+            maxFileSize = maxFileSize || '30M';
+            containerId = containerId || 'uploadFormContainer';
+
+            $.ajax({
+                url: '/file/uploadFormAjax',
+                type: 'GET',
+                data: {
+                    refDocId: refDocId,
+                    docId: docId,
+                    maxFileSize: maxFileSize
+                },
+                success: function(response) {
+                    console.log('Upload form loaded successfully:', response);
+                    $('#' + containerId).html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        }
+    </script>
+</div>

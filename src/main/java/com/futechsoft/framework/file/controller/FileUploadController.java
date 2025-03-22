@@ -42,7 +42,6 @@ import com.google.gson.Gson;
 @Controller
 public class FileUploadController extends AbstractController {
 
-
 	@Resource(name = "framework.file.service.FileUploadService")
 	FileUploadService fileUploadService;
 
@@ -51,7 +50,10 @@ public class FileUploadController extends AbstractController {
 
 	@RequestMapping(value = "/file/upload")
 	@ResponseBody
-	public Map<String, Object> upload(Model model, @RequestParam MultipartFile file, @RequestParam String metadata) throws JsonMappingException, JsonProcessingException, FileUploadException {
+	public Map<String, Object> upload(Model model, @RequestParam MultipartFile file, @RequestParam String metadata)
+			throws JsonMappingException, JsonProcessingException, FileUploadException {
+
+		System.out.println("file upload..............................");
 
 		String[] acceptDocs = propertiesConfiguration.getStringArray("file.upload.accept.doc");
 		String[] acceptImages = propertiesConfiguration.getStringArray("file.upload.accept.image");
@@ -87,12 +89,14 @@ public class FileUploadController extends AbstractController {
 
 		if ((acceptDoc + "," + acceptImage + "," + acceptMultimedia).toUpperCase().indexOf(extName.toUpperCase()) == -1) {
 			fileInfo.put("errorCode", ErrorCode.FILE_ACCEPT_ERROR.getCode());
-			fileInfo.put("errorMessage", StringUtils.replace(ErrorCode.FILE_ACCEPT_ERROR.getMessage(), "{{fileExt}}", extName));
+			fileInfo.put("errorMessage",
+					StringUtils.replace(ErrorCode.FILE_ACCEPT_ERROR.getMessage(), "{{fileExt}}", extName));
 		}
 
-		if (fileInfoVo.getFileSize() > uploadSize || file.getSize() > uploadSize  || file.getSize() > chunkSize) {
+		if (fileInfoVo.getFileSize() > uploadSize || file.getSize() > uploadSize || file.getSize() > chunkSize) {
 			fileInfo.put("errorCode", ErrorCode.FILE_SIZE_ERROR.getCode());
-			fileInfo.put("errorMessage", StringUtils.replace(ErrorCode.FILE_SIZE_ERROR.getMessage(), "{{fileSize}}", (uploadSize / 1024 / 1024) + "M"));
+			fileInfo.put("errorMessage", StringUtils.replace(ErrorCode.FILE_SIZE_ERROR.getMessage(), "{{fileSize}}",
+					(uploadSize / 1024 / 1024) + "M"));
 
 		} else {
 			fileInfoVo = fileUploadService.upload(file, fileInfoVo);
@@ -120,16 +124,15 @@ public class FileUploadController extends AbstractController {
 
 		String tempUploadPath = propertiesConfiguration.getString("file.uploadPath.temp");
 		String realUploadPath = propertiesConfiguration.getString("file.uploadPath.real");
-/*
-		Gson gson = new Gson();
-		FileInfoVo[] fileInfoVos = gson.fromJson(delFileInfo, FileInfoVo[].class);
-*/
+		/*
+		 * Gson gson = new Gson();
+		 * FileInfoVo[] fileInfoVos = gson.fromJson(delFileInfo, FileInfoVo[].class);
+		 */
 		List<FileInfoVo> fileList = new ArrayList<FileInfoVo>();
 
 		for (FileInfoVo fileInfoVo : fileInfoVos) {
 
-			File delFile =Paths.get(tempUploadPath,  fileInfoVo.getFileId()+".TEMP").toFile();
-
+			File delFile = Paths.get(tempUploadPath, fileInfoVo.getFileId() + ".TEMP").toFile();
 
 			if (delFile.exists()) {
 				delFile.delete();
@@ -137,8 +140,6 @@ public class FileUploadController extends AbstractController {
 
 			fileInfoVo.setDelYn("Y");
 			fileList.add(fileInfoVo);
-
-
 
 			// 실제파일삭제
 			if (!(StringUtils.defaultString(fileInfoVo.getTemp()).equals("Y")) && fileInfoVo.getDelYn().equals("Y")) {
@@ -148,14 +149,14 @@ public class FileUploadController extends AbstractController {
 
 				FileInfoVo realFileInfoVo = fileUploadService.getFileInfo(params);
 
-				//파일삭제권한
-				boolean deleteFileCheck=true;
-				deleteFileCheck =FileUtil.hasFileDeleteAuth(fileInfoVo, realFileInfoVo);
+				// 파일삭제권한
+				boolean deleteFileCheck = true;
+				deleteFileCheck = FileUtil.hasFileDeleteAuth(fileInfoVo, realFileInfoVo);
 
-				delFile = Paths.get(realUploadPath, realFileInfoVo.getFilePath(),  realFileInfoVo.getFileId() + ".FILE").toFile();
+				delFile = Paths.get(realUploadPath, realFileInfoVo.getFilePath(), realFileInfoVo.getFileId() + ".FILE")
+						.toFile();
 
-
-				if ( delFile.exists() && deleteFileCheck) {
+				if (delFile.exists() && deleteFileCheck) {
 					delFile.delete();
 				}
 				if (deleteFileCheck) {
@@ -173,19 +174,21 @@ public class FileUploadController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/file/uploadForm")
-	public String uploadForm(@RequestParam(required = false, defaultValue = "") String acceptType, HttpServletRequest req) throws Exception {
+	public String uploadForm(@RequestParam(required = false, defaultValue = "") String acceptType, HttpServletRequest req)
+			throws Exception {
 
-		setuploadForm(acceptType,  req);
+		setuploadForm(acceptType, req);
 		return "framework/file/upload";
 	}
 
 	/**
 	 * 업로드 폼 세팅
+	 * 
 	 * @param acceptType
 	 * @param req
 	 * @throws Exception
 	 */
-	private void setuploadForm(String acceptType, HttpServletRequest req)  throws Exception {
+	private void setuploadForm(String acceptType, HttpServletRequest req) throws Exception {
 
 		String[] acceptDocs = propertiesConfiguration.getStringArray("file.upload.accept.doc");
 		String[] acceptImages = propertiesConfiguration.getStringArray("file.upload.accept.image");
@@ -222,8 +225,6 @@ public class FileUploadController extends AbstractController {
 		}
 	}
 
-
-
 	@RequestMapping(value = "/file/download")
 	public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -240,20 +241,19 @@ public class FileUploadController extends AbstractController {
 
 		try {
 			if (StringUtils.defaultString(fileInfoVo.getTemp(), "").equals("Y")) {
-				downloadFile = Paths.get(tempUploadPath,  fileInfoVo.getFileId() + ".TEMP").toFile();
+				downloadFile = Paths.get(tempUploadPath, fileInfoVo.getFileId() + ".TEMP").toFile();
 
 			} else {
 				params.put("fileId", fileInfoVo.getFileId());
 				fileInfoVo = fileUploadService.getFileInfo(params);
 
-				//파일다운로드 권한
-				boolean fileDownloadCheck =FileUtil.hasFileDownloadAuth(fileInfoVo);
-				if(!fileDownloadCheck) {
+				// 파일다운로드 권한
+				boolean fileDownloadCheck = FileUtil.hasFileDownloadAuth(fileInfoVo);
+				if (!fileDownloadCheck) {
 					throw new FileDownloadException(ErrorCode.FILE_ACCESS_DENIED.getMessage());
 				}
 
-
-				downloadFile = Paths.get(realUploadPath, fileInfoVo.getFilePath(),  fileInfoVo.getFileId()+".FILE").toFile();
+				downloadFile = Paths.get(realUploadPath, fileInfoVo.getFilePath(), fileInfoVo.getFileId() + ".FILE").toFile();
 
 			}
 
@@ -261,17 +261,17 @@ public class FileUploadController extends AbstractController {
 
 				response.setContentType("application/octet-stream; charset=utf-8");
 
-				if( downloadFile.length() > 1024*1024*20) {  //20M
+				if (downloadFile.length() > 1024 * 1024 * 20) { // 20M
 					response.setHeader("Content-Transfer-Encoding", "chunked");
-				}else {
+				} else {
 					response.setContentLength((int) downloadFile.length());
 					response.setHeader("Content-Transfer-Encoding", "binary");
 				}
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(fileInfoVo.getFileNm(), "utf-8") + "\";");
-
+				response.setHeader("Content-Disposition",
+						"attachment; filename=\"" + java.net.URLEncoder.encode(fileInfoVo.getFileNm(), "utf-8") + "\";");
 
 				try (OutputStream out = response.getOutputStream(); FileInputStream fis = new FileInputStream(downloadFile);) {
-					//FileCopyUtils.copy(fis, out);
+					// FileCopyUtils.copy(fis, out);
 					CommonUtil.copy(fis, out);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -318,17 +318,18 @@ public class FileUploadController extends AbstractController {
 
 			res.setContentType("application/octet-stream; charset=utf-8");
 
-			if( downloadFile.length() > 1024*1024*20) {  //20M
+			if (downloadFile.length() > 1024 * 1024 * 20) { // 20M
 				res.setHeader("Content-Transfer-Encoding", "chunked");
-			}else {
+			} else {
 				res.setContentLength((int) downloadFile.length());
 				res.setHeader("Content-Transfer-Encoding", "binary");
 			}
 
-			res.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(zipFileName, "utf-8") + "\";");
+			res.setHeader("Content-Disposition",
+					"attachment; filename=\"" + java.net.URLEncoder.encode(zipFileName, "utf-8") + "\";");
 
 			try (OutputStream out = res.getOutputStream(); FileInputStream fis = new FileInputStream(downloadFile);) {
-				//FileCopyUtils.copy(fis, out);
+				// FileCopyUtils.copy(fis, out);
 				CommonUtil.copy(fis, out);
 				if (downloadFile.exists())
 					downloadFile.delete();
@@ -343,16 +344,12 @@ public class FileUploadController extends AbstractController {
 		}
 	}
 
-
-
-
 	@RequestMapping(value = "/file/isExistFile")
 	@ResponseBody
 	public Map<String, Object> isExistFile(HttpServletRequest request, FileInfoVo fileInfoVo) throws Exception {
 
 		String tempUploadPath = propertiesConfiguration.getString("file.uploadPath.temp");
 		String realUploadPath = propertiesConfiguration.getString("file.uploadPath.real");
-
 
 		FtMap params = getFtMap(request);
 
@@ -361,47 +358,40 @@ public class FileUploadController extends AbstractController {
 		File downloadFile = null;
 
 		if (StringUtils.defaultString(params.getString("temp"), "").equals("Y")) {
-			downloadFile = Paths.get(tempUploadPath,  fileInfoVo.getFileId() + ".TEMP").toFile();
+			downloadFile = Paths.get(tempUploadPath, fileInfoVo.getFileId() + ".TEMP").toFile();
 
 		} else {
 			params.put("fileId", fileInfoVo.getFileId());
 			fileInfoVo = fileUploadService.getFileInfo(params);
 
-			//파일다운로드 권한
-			fileDownloadCheck =FileUtil.hasFileDownloadAuth(fileInfoVo);
+			// 파일다운로드 권한
+			fileDownloadCheck = FileUtil.hasFileDownloadAuth(fileInfoVo);
 
-			downloadFile = Paths.get(realUploadPath,fileInfoVo.getFilePath(), fileInfoVo.getFileId() + ".FILE").toFile();
+			downloadFile = Paths.get(realUploadPath, fileInfoVo.getFilePath(), fileInfoVo.getFileId() + ".FILE").toFile();
 
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		if (!downloadFile.exists() ) {
+		if (!downloadFile.exists()) {
 			map.put("msg", ErrorCode.FILE_NOT_FOUND.getMessage());
-		}else if(!fileDownloadCheck) {
+		} else if (!fileDownloadCheck) {
 			map.put("msg", ErrorCode.FILE_ACCESS_DENIED.getMessage());
-		}else {
+		} else {
 			map.put("msg", "SUCCESS");
 		}
-
-
 
 		return map;
 
 	}
-	
-	
-	
-	  @RequestMapping(value = "/file/uploadFormAjax", method = RequestMethod.GET)
-	  public String uploadForm(HttpServletRequest req) throws Exception {
-		  
-		  FtMap params = getFtMap(req);
-		  
-	      setuploadForm(params.getString("acceptType"), req);
-	      return "framework/file/upload";  // 이 경로는 서버에서 반환할 HTML 페이지 경로
-	  }
 
-	  
-	  
+	@RequestMapping(value = "/file/uploadFormAjax", method = RequestMethod.GET)
+	public String uploadForm(HttpServletRequest req) throws Exception {
+
+		FtMap params = getFtMap(req);
+
+		setuploadForm(params.getString("acceptType"), req);
+		return "framework/file/upload"; // 이 경로는 서버에서 반환할 HTML 페이지 경로
+	}
 
 }

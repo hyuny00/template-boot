@@ -9,44 +9,16 @@
 
 <body>
 
-<!-- includeTagsFragment 포함 -->
     
     <div layout:fragment="content">
-    
-    
+    <!-- uploadFrag.html을 포함 -->
+    <div th:replace="framework/file/uploadFrag :: fragment"></div>
+
+
     <script>
-    // Ajax로 form 데이터 전달 예시
-    $(document).ready(function() {
-    	
-    	alert("DD");
-        var acceptType = 'doc';  // 예시 값, 실제로는 동적으로 설정 가능
-        var uploadFormId = 'someId'; // 실제값을 사용
-        var refDocId = 'refId'; // 실제값을 사용
-        var docId = 'docId123'; // 실제값을 사용
-        var mode = 'edit'; // 실제값을 사용
+            loadUploadForm('refId123', 'docId456', '50M', 'uploadFormContainer');
+    </script>
 
-        $.ajax({
-            url: '/file/uploadFormAjax',  // 서버 URL
-            type: 'GET',
-            data: {
-                acceptType: acceptType,  // 서버로 넘길 데이터
-                uploadFormId: uploadFormId,
-                refDocId: refDocId,
-                docId: docId,
-                mode: mode
-            },
-            success: function(response) {
-                // 서버에서 받은 HTML을 #uploadFormContainer에 삽입
-                console.log(response);
-                $('#uploadFormContainer').html(response);  // 서버에서 받은 HTML을 삽입
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error:', error);
-            }
-        });
-
-    });
-</script>
     
     <div id="uploadFormContainer"></div>
         <h2>홈 페이지</h2>
