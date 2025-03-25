@@ -1,12 +1,12 @@
 spring:
-  profiles:
-    active: dev
+ profiles: 
+  active: dev
 
 server:
-  servlet:
-    session:
-      cookie:
-        secure: true
+ servlet:
+  session:
+   cookie:
+    secure: true  
 ---
 server:
   servlet:
@@ -14,71 +14,92 @@ server:
     encoding:
       charset: UTF-8
       force: true
-
+    
   error:
-    include-exception: true # 오류 응답에 exception의 내용을 포함할지 여부
+    include-exception: true # 오류 응답에 exception의 내용을 포함할지 여부 
     include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
     whitelabel:
-      enabled: false
----
-spring:
-  config:
-    location: D:/dev/workspace/template-boot/src/main/webapp/WEB-INF/config/globals_dev.properties
-    activate:
-      on-profile: dev
----
-spring:
-  config:
-    location: D:/ODA_DEV/eGovFrameDev-3.9.0-64bit/workspace/template/src/main/webapp/WEB-INF/config/globals_prod.properties
-    activate:
-      on-profile: prod
----
-spring:
-  #mvc:
-  #view:
-  #prefix: /WEB-INF/jsp/
-  #suffix: .jsp
+       enabled: false
 
-  thymeleaf:
-    prefix: file:///D:/dev/workspace/template-boot/src/main/webapp/WEB-INF/templates/
-    suffix: .html
-    cache: false
-    #view-names : thymeleaf/*
+    
+--- 
+spring:
+ config:
+  location:  D:/ODA_DEV/eGovFrameDev-3.9.0-64bit/workspace/template/src/main/webapp/WEB-INF/config/globals_dev.properties
+  activate:
+   on-profile  : dev
+   
+
+
+---
+spring:
+ config:
+  location: D:/ODA_DEV/eGovFrameDev-3.9.0-64bit/workspace/template/src/main/webapp/WEB-INF/config/globals_prod.properties
+  activate:
+   on-profile  : prod
+   
+
+
+   
+---
+spring:
+       #mvc:
+        #view:
+         #prefix: /WEB-INF/jsp/
+         #suffix: .jsp
+
+
+
+
+       thymeleaf:
+        prefix: file:///D:/ODA_DEV/eGovFrameDev-3.9.0-64bit/workspace/template/src/main/webapp/WEB-INF/templates/
+        suffix : .html
+        mode: HTML
+        cache : false
+        #view-names : thymeleaf/*
+
 ---
 #spring:
-#web:
-#resources:
-#static-locations: classpath:/static/
-#add-mappings: true
-
-#mvc:
-#static-path-pattern: /static/**
-
-#---
+ #web:
+  #resources:
+   #static-locations: classpath:/static/
+   #add-mappings: true
+   
+ #mvc:
+  #static-path-pattern: /static/**
+    
+#--- 
 mybatis:
-  configuration:
-    cache-enabled: true
-  main:
-    datasource:
-      type: org.apache.commons.dbcp2.BasicDataSource
-      driverClassName: org.h2.Driver
-      jdbc-url: jdbc:h2:tcp://localhost/~/test
-      username: sa
-      password:
-      jndi-name: java:comp/env/java:/MYJNDI
+ configuration:
+   cache-enabled: true
+ main: 
+  datasource:
+   type: org.apache.commons.dbcp2.BasicDataSource
+   driverClassName: org.h2.Driver
+   jdbc-url: jdbc:h2:tcp://localhost/~/test
+   username: sa
+   password:  
+   jndi-name: java:comp/env/java:/MYJNDI
 
-  osmb:
-    datasource:
-      type: org.apache.commons.dbcp2.BasicDataSource
-      driverClassName: org.h2.Driver
-      jdbc-url: jdbc:h2:tcp://localhost/~/test
-      username: sa
-      password:
+ osmb: 
+  datasource:
+   type: org.apache.commons.dbcp2.BasicDataSource
+   driverClassName: org.h2.Driver
+   jdbc-url: jdbc:h2:tcp://localhost/~/test
+   username: sa
+   password:  
+
+
+
 
 ---
 logging:
-  config: classpath:log4j2.xml
-  level:
+ config: classpath:log4j2.xml
+ level:
     org:
-      hibernate.SQL: debug
-      hibernate.type.descriptor.sql: trace
+       hibernate.SQL : debug
+       hibernate.type.descriptor.sql : trace
+
+
+   
+ 

@@ -127,7 +127,9 @@
 			user_no =#{userNo}
 	</delete>
 
-
+ <select id="detailUser"  resultType="ftMap">
+	SELECT * FROM TB_USER WHERE (user_no=?)
 	
+	</select>
 
 </mapper>

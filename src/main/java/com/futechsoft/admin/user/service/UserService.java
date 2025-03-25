@@ -16,8 +16,6 @@ import com.futechsoft.admin.user.vo.UserAuth;
 import com.futechsoft.framework.annotation.CacheAccess;
 import com.futechsoft.framework.common.page.Page;
 import com.futechsoft.framework.common.page.Pageable;
-import com.futechsoft.framework.common.sqlHelper.TableInfo;
-import com.futechsoft.framework.common.sqlHelper.WhereKey;
 import com.futechsoft.framework.util.FtMap;
 
 @Service("user.service.UserService")
@@ -42,7 +40,7 @@ public class UserService {
 
 	public FtMap detail(FtMap params) throws Exception {
 
-		return mapper.selectByKey(TableInfo.USER_TABLE, params, new WhereKey("user_no"));
+		return mapper.detailUser(params);
 
 	}
 
