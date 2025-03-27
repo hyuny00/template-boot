@@ -80,10 +80,12 @@ public class LoginController {
 			sessionRegistry.registerNewSession(session.getId(), user);
 
 			loginSuccessHandler.setDefaultUrl("/main");
+			loginSuccessHandler.setLoginId("userId");
 			loginSuccessHandler.onAuthenticationSuccess(request, response, securityContext.getAuthentication());
 
 		}catch(Exception e) {
 			loginFailureHandler.setDefaultFailureUrl("/login/loginPage?error");
+			loginFailureHandler.setLoginId("userId");
 			loginFailureHandler.onAuthenticationFailure(request, response,  new UsernameNotFoundException(e.getMessage()));
 		}
 
