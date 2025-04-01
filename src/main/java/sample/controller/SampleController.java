@@ -113,7 +113,7 @@ public class SampleController extends AbstractController {
 		model.addAttribute("pageable", page.getPageable());
 		
 		request.setAttribute("list", page.getList());
-		request.setAttribute("pageable", page.getPageable());
+		request.setAttribute("pageObject", page.getPageable());
 
 		return "tiles:sample/sampleList";
 	}
