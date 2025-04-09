@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.futechsoft.framework.common.sqlHelper.TableInfo;
 import com.futechsoft.framework.exception.ErrorCode;
 import com.futechsoft.framework.exception.FileUploadException;
 import com.futechsoft.framework.exception.ZipParsingException;
@@ -224,7 +223,6 @@ public class FileUploadService {
 			if (!refDocId.equals(findDocId)) return;
 		}
 
-		List<FtMap> columnList = mapper.getColumnList(TableInfo.FILE_TABLE);
 
 		int fileOrd = 0;
 		for (FileInfoVo fileInfoVo : fileInfoVos) {

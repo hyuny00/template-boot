@@ -30,4 +30,7 @@ public interface FileMapper extends GenericMapper<FtMap> {
 	FtMap selectFileDataInfo(FtMap params) throws Exception;
 
 	FtMap selectFile(FtMap params) throws Exception;
+	
+	
+	
 }

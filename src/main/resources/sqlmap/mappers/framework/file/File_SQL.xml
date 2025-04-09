@@ -107,7 +107,7 @@
 
 
       <update id="deleteDoc" parameterType="ftMap">
-    	DELETE
+    	DELETE 
     		TB_FILE
     	WHERE
     		doc_id = #{docId}
